@@ -4,9 +4,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.13.0
-  name: inputs.template.fn.crossplane.io
+  name: inputs.unittest.fn.crossplane.io
 spec:
-  group: template.fn.crossplane.io
+  group: unittest.fn.crossplane.io
   names:
     categories:
     - crossplane
@@ -26,10 +26,6 @@ spec:
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
             type: string
-          example:
-            description: Example is an example field. Replace it with whatever input
-              you need. :)
-            type: string
           kind:
             description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
@@ -37,8 +33,29 @@ spec:
             type: string
           metadata:
             type: object
+          testCases:
+            description: Example is an example field. Replace it with whatever input
+              you need. :)
+            items:
+              properties:
+                assert:
+                  description: Test is a CEL expression to evaluate. If true the test
+                    passes, if false the test fails
+                  type: string
+                description:
+                  description: Description is a description of the test
+                  type: string
+                errorOnFailedTest:
+                  description: ErrorOnFailedTest whether we return an error if any
+                    test fails default is false
+                  type: boolean
+              required:
+              - assert
+              - errorOnFailedTest
+              type: object
+            type: array
         required:
-        - example
+        - testCases
         type: object
     served: true
     storage: true
