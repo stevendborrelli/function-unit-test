@@ -38,9 +38,8 @@ func TestRunFunction(t *testing.T) {
 				req: &fnv1beta1.RunFunctionRequest{
 					Meta: &fnv1beta1.RequestMeta{Tag: "hello"},
 					Input: resource.MustStructJSON(`{
-						"apiVersion": "template.fn.crossplane.io/v1beta1",
-						"kind": "Input",
-						"example": "Hello, world"
+						"apiVersion": "unitttest.fn.crossplane.io/v1beta1",
+						"kind": "Input"
 					}`),
 				},
 			},
