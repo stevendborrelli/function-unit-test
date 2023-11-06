@@ -47,7 +47,7 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 
 	if len(in.TestCases) == 0 {
 		f.log.Info("No test cases supplied")
-		return rsp, nil
+		return rsp, errors.New("No test cases supplied")
 	}
 
 	tr := TestResults{}
@@ -90,11 +90,11 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 		response.Fatal(rsp, errors.Errorf("failing tests: %s", tf))
 		return rsp, errors.Errorf("failing tests: %s", tf)
 	}
-
 	if len(tr.Error) > 0 {
 		te, _ := json.MarshalIndent(tr.Error, "", "  ")
-		response.Fatal(rsp, errors.Errorf("tests with errors: %s", te))
-		return rsp, errors.Errorf("there were tests with errors: %s", string(te))
+		dump, _ := json.MarshalIndent(req, "", "  ")
+		response.Fatal(rsp, errors.Errorf("tests with errors: %s\ninput: %s", te, dump))
+		return rsp, errors.Errorf("there were tests with errors: %s\ninput: %s", string(te), string(dump))
 	}
 
 	return rsp, nil

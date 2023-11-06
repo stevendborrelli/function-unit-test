@@ -15,13 +15,41 @@ spec:
     input:
       apiVersion: pt.fn.crossplane.io/v1beta1
       kind: Resources
-      condition:
-         expression: observed.composite.resource.spec.env == "dev" && observed.composite.resource.spec.render == true 
       resources:
          - name: test-resource
            base:
             apiVersion: nop.crossplane.io/v1alpha1
             kind: NopResource
+            metadata:
+              labels:
+                security-setting: "true"
+            spec:
+              forProvider:
+                fields:
+                  integerField: 42
+                  stringField: "string"
+                  objectField:
+                    stringField: "object"
+                  arrayField:
+                  - stringField: "array"
+                conditionAfter:
+                - time: 5s
+                  conditionType: Ready
+                  conditionStatus: "True"
+                connectionDetails:
+                - name: username
+                  value: fakeuser
+                - name: password
+                  value: verysecurepassword
+                - name: endpoint
+                  value: 127.0.0.1
+         - name: bad-resource
+           base:
+            apiVersion: nop.crossplane.io/v1alpha1
+            kind: NopResource
+            metadata:
+              labels:
+                security-setting: "true"
             spec:
               forProvider:
                 fields:
@@ -48,14 +76,22 @@ spec:
     input:
       apiVersion: unittest.fn.crossplane.io/v1beta1
       kind: TestCases
-      errorOnFailedTest: true
+      errorOnFailedTest: false
       testCases:
       - description: "test pass"
         assert: observed.composite.resource.spec.env == "dev"
       - description: "test fail"
         assert: observed.composite.resource.spec.env == "prod"
-      - description: "test error"
-        assert: a == b
-      - assert: desired.resources.all(r, r.kind != "")
-        description: all resources have a Kind defined
+      # - description: "test error"
+      #   assert: a == b
+      - assert: |-
+          "kind" in desired.resources['test-resource'].resource &&
+          desired.resources['test-resource'].resource.kind == 'NopResource'
+        description: all resources "test" is of "NopResource" kind
+      - assert: |- 
+          desired.resources.all(r, "labels" in desired.resources[r].resource.metadata && 
+          "security-setting" in desired.resources[r].resource.metadata.labels &&
+          desired.resources[r].resource.metadata.labels["security-setting"] == "true")
+        description: All resources have the "security-setting" label
+
 
