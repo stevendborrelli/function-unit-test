@@ -1,25 +1,61 @@
-# function-template-go
+# function-unit-test
+
+<!-- 
 [![CI](https://github.com/crossplane/function-template-go/actions/workflows/ci.yml/badge.svg)](https://github.com/crossplane/function-template-go/actions/workflows/ci.yml)
 
-A template for writing a [composition function][functions] in [Go][go].
+-->
+This function can run CEL expressions against your desired state.
 
-To learn how to use this template:
+## Installing
 
-* [Follow the guide to writing a composition function in Go][function guide]
-* [Learn about how composition functions work][functions]
-* [Read the function-sdk-go package documentation][package docs]
+Functions require Crossplane 1.14 or newer. Apply the following manifest to your cluster:
 
-If you just want to jump in and get started:
+```yaml
+apiVersion: pkg.crossplane.io/v1beta1
+kind: Function
+metadata:
+  name: function-unit-test
+spec:
+  package: index.docker.io/steve/function-unit-test:v0.1.0
+```
 
-1. Replace `function-template-go` with your function's name in `go.mod`,
-   `package/crossplane.yaml`, and any Go imports
-1. Update `input/v1beta1/` to reflect your desired input (and run `go generate`)
-1. Add your logic to `RunFunction` in `fn.go`
-1. Add tests for your logic in `fn_test.go`
-1. Update this file, `README.md`, to be about your function!
+## Configuring Unit Tests
 
-This template uses [Go][go], [Docker][docker], and the [Crossplane CLI][cli] to
-build functions.
+See tests in [examples](examples).
+
+After all your desired resources have been rendered with other functions,
+call the unittest function and define CEL `TestCases`.
+
+If `errorOnFailedTest` is set to true, failing tests will return an error. This is
+useful when running this function in CI pipelines via `crossplane beta render`.
+
+```yaml
+ - step:
+    functionRef:
+      name: function-unit-test
+    input:
+      apiVersion: unittest.fn.crossplane.io/v1beta1
+      kind: TestCases
+      errorOnFailedTest: false
+      testCases:
+      - description: "test pass"
+        assert: observed.composite.resource.spec.env == "dev"
+      - description: "test fail"
+        assert: observed.composite.resource.spec.env == "prod"
+      # - description: "test error"
+      #   assert: a == b
+      - assert: |-
+          "kind" in desired.resources['test-resource'].resource &&
+          desired.resources['test-resource'].resource.kind == 'NopResource'
+        description: all resources "test" is of "NopResource" kind
+      - assert: |- 
+          desired.resources.all(r, "labels" in desired.resources[r].resource.metadata && 
+          "security-setting" in desired.resources[r].resource.metadata.labels &&
+          desired.resources[r].resource.metadata.labels["security-setting"] == "true")
+        description: All resources have the "security-setting" label
+```
+
+## Building the Function
 
 ```shell
 # Run code generation - see input/generate.go
@@ -29,10 +65,10 @@ $ go generate ./...
 $ go test ./...
 
 # Build the function's runtime image - see Dockerfile
-$ docker build . --tag=runtime
+$ docker build . --tag=function-unit-test-runtime
 
 # Build a function package - see package/crossplane.yaml
-$ crossplane xpkg build -f package --embed-runtime-image=runtime
+$ crossplane xpkg build -f package --embed-runtime-image=function-unit-test-runtime
 ```
 
 [functions]: https://docs.crossplane.io/latest/concepts/composition-functions
