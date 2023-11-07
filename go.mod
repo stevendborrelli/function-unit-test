@@ -8,7 +8,6 @@ require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/crossplane/crossplane-runtime v1.14.1
 	github.com/crossplane/function-sdk-go v0.1.0
-	github.com/crossplane/function-template-go v0.0.0-20231103045028-a3edeff0786a
 	github.com/google/cel-go v0.16.1
 	github.com/google/go-cmp v0.6.0
 	google.golang.org/protobuf v1.31.0
@@ -49,6 +48,7 @@ require (
 	github.com/spf13/cobra v1.7.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stoewer/go-strcase v1.2.0 // indirect
+	github.com/stretchr/testify v1.8.4 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.26.0 // indirect
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect

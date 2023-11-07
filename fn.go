@@ -47,12 +47,13 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 
 	if len(in.TestCases) == 0 {
 		f.log.Info("No test cases supplied")
-		return rsp, errors.New("No test cases supplied")
+		response.Fatal(rsp, errors.New("No test cases supplied"))
+		return rsp, nil
 	}
-
 	tr := TestResults{}
 
 	// Set up input variables for our tests
+	// TODO: we could filter resources here based on annotation, or hand it off to CEL to filter.
 	vars := RunFunctionRequestToCELVars(req)
 
 	for i, tc := range in.TestCases {
@@ -90,11 +91,11 @@ func (f *Function) RunFunction(_ context.Context, req *fnv1beta1.RunFunctionRequ
 		response.Fatal(rsp, errors.Errorf("failing tests: %s", tf))
 		return rsp, errors.Errorf("failing tests: %s", tf)
 	}
+
 	if len(tr.Error) > 0 {
 		te, _ := json.MarshalIndent(tr.Error, "", "  ")
 		dump, _ := json.MarshalIndent(req, "", "  ")
 		response.Fatal(rsp, errors.Errorf("tests with errors: %s\ninput: %s", te, dump))
-		return rsp, errors.Errorf("there were tests with errors: %s\ninput: %s", string(te), string(dump))
 	}
 
 	return rsp, nil

@@ -48,8 +48,8 @@ func TestRunFunction(t *testing.T) {
 					Meta: &fnv1beta1.ResponseMeta{Tag: "hello", Ttl: durationpb.New(response.DefaultTTL)},
 					Results: []*fnv1beta1.Result{
 						{
-							Severity: fnv1beta1.Severity_SEVERITY_NORMAL,
-							Message:  "I was run with input \"Hello, world\"!",
+							Severity: fnv1beta1.Severity_SEVERITY_FATAL,
+							Message:  "No test cases supplied",
 						},
 					},
 				},
