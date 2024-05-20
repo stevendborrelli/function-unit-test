@@ -14,7 +14,7 @@ on:
 
 env:
   # Common versions
-  GO_VERSION: '1.21.3'
+  GO_VERSION: '1.22.3'
   GOLANGCI_VERSION: 'v1.55.2'
   DOCKER_BUILDX_VERSION: 'v0.11.2'
 
@@ -30,8 +30,7 @@ env:
 
   # The package to push, without a version tag. The default matches GitHub. For
   # example xpkg.upbound.io/crossplane/function-template-go.
-  # XPKG: xpkg.upbound.io/${{ github.repository}}
-  XPKG: index.docker.io/steve/function-unit-test
+  XPKG: xpkg.upbound.io/${{ github.repository}}
 
   # The package version to push. The default is 0.0.0-gitsha.
   XPKG_VERSION: ${{ inputs.version }}
@@ -148,7 +147,7 @@ jobs:
         uses: docker/login-action@v3
         if: env.XPKG_ACCESS_ID != ''
         with:
-          registry: index.docker.io
+          #registry: index.docker.io
           username: ${{ secrets.XPKG_ACCESS_ID }}
           password: ${{ secrets.XPKG_TOKEN }}
 
