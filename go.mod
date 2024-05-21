@@ -8,7 +8,7 @@ require (
 	github.com/alecthomas/kong v0.9.0
 	github.com/crossplane/crossplane-runtime v1.14.1
 	github.com/crossplane/function-sdk-go v0.1.0
-	github.com/google/cel-go v0.16.1
+	github.com/google/cel-go v0.20.1
 	github.com/google/go-cmp v0.6.0
 	google.golang.org/protobuf v1.33.0
 	k8s.io/apimachinery v0.28.3
@@ -18,6 +18,7 @@ require (
 require (
 	dario.cat/mergo v1.0.0 // indirect
 	github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20230305170008-8188dc5388df // indirect
+	github.com/antlr4-go/antlr/v4 v4.13.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
