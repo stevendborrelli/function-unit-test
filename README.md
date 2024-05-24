@@ -1,10 +1,9 @@
 # function-unit-test
 
-<!-- 
-[![CI](https://github.com/crossplane/function-template-go/actions/workflows/ci.yml/badge.svg)](https://github.com/crossplane/function-template-go/actions/workflows/ci.yml)
+[![CI](https://github.com/crossplane-contrib/function-unit-test/actions/workflows/ci.yml/badge.svg)](https://github.com/crossplane-contrib/function-unit-test/actions/workflows/ci.yml)
 
--->
-This function can run CEL expressions against your desired state.
+`function-unit-test` is a Crossplane function that can run CEL expressions against your desired state.
+This allows you to test the results of a Composition pipeline.
 
 ## Installing
 
