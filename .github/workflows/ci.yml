@@ -147,7 +147,7 @@ jobs:
         uses: docker/login-action@v3
         if: env.XPKG_ACCESS_ID != ''
         with:
-          #registry: index.docker.io
+          registry: xpkg.upbound.io
           username: ${{ secrets.XPKG_ACCESS_ID }}
           password: ${{ secrets.XPKG_TOKEN }}
 
